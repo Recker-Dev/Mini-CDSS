@@ -1,0 +1,29 @@
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: minicdss-api
+    # ports:
+    #   - "8000:8000"
+    env_file:
+      - .env
+    command: uvicorn main:app --host 0.0.0.0 --port 8000
+    networks:
+      - projects-net
+
+  streamlit:
+    build:
+      context: ./Frontend
+      dockerfile: Dockerfile
+    container_name: minicdss-frontend
+    ports:
+      - "8501:8501"
+    depends_on:
+      - api
+    networks:
+      - projects-net
+
+networks:
+  projects-net:
+    external: true
